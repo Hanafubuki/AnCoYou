@@ -24,8 +24,7 @@ def analyse():
     if(request.form.get("analyse")):
         result = analyse_sentiment(comments)
     else:
-        #analyse_words(comments, word)
-        pass
+        result = analyse_words(comments, word)
     return render_template('index.html', result=result)
 
 
@@ -97,9 +96,22 @@ def analyse_sentiment(comments):
             max_negative = score['compound']
     
     return result
-    #flash(result['total_comments'])
-    #return redirect(url_for('index'))
-    #return render_template('index.html', result="")
+
+def analyse_words(comments, word):
+    result = {
+        'Commentários totais': 0,
+        'Frequencia': 0,        
+    }
+    
+    search_word = word.lower()
+
+    for comment in comments:
+        result['Commentários totais'] += 1
+        
+        if search_word in comment.lower(): 
+            result['Frequencia'] += 1
+
+    return result
 
 
 if __name__ == '__main__':
