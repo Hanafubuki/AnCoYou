@@ -1,0 +1,35 @@
+{% extends 'layout/app.html' %}
+{% block body %}
+    <div class="container">
+      <div class="page-header">
+          <h1>{{ titulo }}</h1>
+      </div>
+      <form action="{{url_for('analyse')}}" method="POST" enctype="multipart/form-data" class="flex justify-content-center row">
+        <fieldset class="col-6">
+          <div class="form-group">
+            <label for="video_id">Video ID</label>
+            <input type="text" id="video_id" name="video_id" class="form-control mt-1">
+          </div>
+          <div class="form-group mt-3">
+            <label for="word">Palavra</label>
+            <input type="text" id="word" name="word" class="form-control mt-1">
+          </div>
+          <div class="text-center mt-4 col-12">
+            <button type="submit" name="analyse" value="analyse" class="btn btn-primary btn-salvar mt-1">Analisar Sentimento</button>
+            <button type="submit" name="search" value="search" class="btn btn-secondary btn-salvar mt-1">Pesquisar Frequência de Palavra</button>
+        </div>
+        </fieldset>
+      </form>
+      
+      <div class="mt-4 flex justify-content-center row">
+        {% if result != "" %}
+            <h2 class="text-center mt-4">Resultado</h2>
+            <ul class="list-group col-6 mt-4">
+            {% for key, value in result.items() %}       
+                  <li class="list-group-item"><b>{{ key }}</b>: {{ value }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+      </div>
+    </div>
+{% endblock %}
