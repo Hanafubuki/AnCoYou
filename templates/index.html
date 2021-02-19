@@ -15,13 +15,14 @@
             <input type="text" id="word" name="word" class="form-control mt-1">
           </div>
           <div class="text-center mt-4 col-12">
-            <button type="submit" name="analyse" value="analyse" class="btn btn-primary btn-salvar mt-1">Analisar Sentimento</button>
-            <button type="submit" name="search" value="search" class="btn btn-secondary btn-salvar mt-1">Pesquisar Frequência de Palavra</button>
-        </div>
+            <button type="submit" name="analyse" value="analyse" class="btn btn-primary mt-1">Analisar Sentimento</button>
+            <button type="submit" name="search" value="search" class="btn btn-secondary mt-1">Pesquisar Frequência de Palavra</button>
+          </div>
+          <div class="text-center mt-4" id="loading"></div>
         </fieldset>
       </form>
       
-      <div class="mt-4 flex justify-content-center row">
+      <div class="mt-4 flex justify-content-center row" id="result">
         {% if result != "" %}
             <h2 class="text-center mt-4">Resultado</h2>
             <ul class="list-group col-6 mt-4">

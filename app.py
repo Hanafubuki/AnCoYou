@@ -26,7 +26,7 @@ def authenticate():
     if(request.form['username'] == "marcia" and request.form['password'] == "Tyk9iP1@3"):
         session['user'] = request.form['username']
         return redirect(url_for('index'))
-    flash('Usuário ou senha está incorreto. Por favor, tente novamente.')
+    flash('ERRO: Usuário e/ou senha incorretos. Por favor, tente novamente.')
     return redirect(url_for('login'))
 
 @app.route('/logout')
@@ -39,15 +39,22 @@ def analyse():
     if 'user' not in session or session['user'] == None:
         return redirect(url_for('login'))
 
-    if(request.form['video_id'] == ""):
-        flash('Insira o ID do video')
-        return
     video_id = request.form['video_id']
     word = request.form['word']
+
+    if(video_id == ""):
+        flash('ERRO: Insira o ID do video')
+        return redirect(url_for('index'))
+
+    if(request.form.get("search") and word == ""):
+        flash('ERRO: Insira a palavra')
+        return redirect(url_for('index'))
+
     comments = get_comments(video_id)
     if(request.form.get("analyse")):
         result = analyse_sentiment(comments)
     else:
+        
         result = analyse_words(comments, word)
     return render_template('index.html', result=result)
 
