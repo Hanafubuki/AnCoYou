@@ -11,13 +11,37 @@ DEVELOPER_KEY = "AIzaSyDQ99WFIPJOjO4Sijgt0RT2YPqGbioyj7s"
 app = Flask(__name__)
 app.secret_key = "asy_by_mimi"
 
-#class Analyse():
 @app.route("/")
 def index():
+    if 'user' not in session or session['user'] == None:
+        return redirect(url_for('login'))
     return render_template('index.html', result="")
+
+@app.route("/login")
+def login():
+    return render_template('login.html')
+
+@app.route('/authenticate', methods=['POST', ])
+def authenticate():
+    if(request.form['username'] == "marcia" and request.form['password'] == "Tyk9iP1@3"):
+        session['user'] = request.form['username']
+        return redirect(url_for('index'))
+    flash('Usuário ou senha está incorreto. Por favor, tente novamente.')
+    return redirect(url_for('login'))
+
+@app.route('/logout')
+def logout():
+    session['user'] = None
+    return redirect(url_for('login'))
 
 @app.route('/analyse', methods=['Post', ])
 def analyse():
+    if 'user' not in session or session['user'] == None:
+        return redirect(url_for('login'))
+
+    if(request.form['video_id'] == ""):
+        flash('Insira o ID do video')
+        return
     video_id = request.form['video_id']
     word = request.form['word']
     comments = get_comments(video_id)
@@ -26,7 +50,6 @@ def analyse():
     else:
         result = analyse_words(comments, word)
     return render_template('index.html', result=result)
-
 
 
 def get_comments(video_id):        
