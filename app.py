@@ -39,27 +39,38 @@ def analyse():
     if 'user' not in session or session['user'] == None:
         return redirect(url_for('login'))
 
-    video_id = request.form['video_id']
+    video = request.form['video']
     word = request.form['word']
 
-    if(video_id == ""):
-        flash('ERRO: Insira o ID do video')
+    if(video == ""):
+        flash('ERRO: Insira o Link do Video')
         return redirect(url_for('index'))
 
     if(request.form.get("search") and word == ""):
         flash('ERRO: Insira a palavra')
         return redirect(url_for('index'))
 
+
+    video_id = get_video_id(video)
+    #flash(video_id)
+    #return redirect(url_for('index'))
     comments = get_comments(video_id)
     if(request.form.get("analyse")):
         result = analyse_sentiment(comments)
     else:
-        
         result = analyse_words(comments, word)
-    return render_template('index.html', result=result)
+    return render_template('index.html', result=result, link=video, word=word)
 
+def get_video_id(video):
+    start = video.find('?v=') +3
+    end = video.find('&')
+    if(end >= 0):
+        video_id = video[start:end]
+    else:
+        video_id = video[start:]
+    return video_id
 
-def get_comments(video_id):        
+def get_comments(video_id):
     # Disable OAuthlib's HTTPS verification when running locally.
     # *DO NOT* leave this option enabled in production.
     os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
@@ -86,7 +97,7 @@ def get_comments(video_id):
             nextPageToken = response['nextPageToken']
         except:
             break
-    
+
     return comments
 
 
@@ -100,7 +111,7 @@ def analyse_sentiment(comments):
         'Commentários totais': 0,
         'Total positivos': 0,
         'Total negativos': 0,
-        'Total neutros': 0,        
+        'Total neutros': 0,
         }
 
     max_positive = 0.05
@@ -124,21 +135,21 @@ def analyse_sentiment(comments):
 
         if score['compound'] <= max_negative:
             max_negative = score['compound']
-    
+
     return result
 
 def analyse_words(comments, word):
     result = {
         'Commentários totais': 0,
-        'Frequencia': 0,        
+        'Frequencia': 0,
     }
-    
+
     search_word = word.lower()
 
     for comment in comments:
         result['Commentários totais'] += 1
-        
-        if search_word in comment.lower(): 
+
+        if search_word in comment.lower():
             result['Frequencia'] += 1
 
     return result
