@@ -144,8 +144,8 @@ def analyse_words(comments, word):
         'Frequencia': 0,
     }
     comments_result = []
-    workbook = xlsxwriter.Workbook('uploads/Youtube_Comments.xlsx')
-    worksheet = workbook.add_worksheet()
+    #workbook = xlsxwriter.Workbook('uploads/Youtube_Comments.xlsx')
+    #worksheet = workbook.add_worksheet()
 
     search_word = word.lower()
 
@@ -153,11 +153,11 @@ def analyse_words(comments, word):
         result['Commentários totais'] += 1
 
         if search_word in comment.lower():
-            worksheet.write(result['Frequencia'], 0, comment)
+            #worksheet.write(result['Frequencia'], 0, comment)
             comments_result.append(comment)
             result['Frequencia'] += 1
 
-    workbook.close()
+    #workbook.close()
     return [result, comments_result]
 
 @app.route('/uploads/<path:filename>', methods=['GET', 'POST'])
