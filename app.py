@@ -1,6 +1,7 @@
 from flask import Flask, render_template, flash, redirect, url_for, session, request
 import googleapiclient.discovery
 import os
+import xlsxwriter
 from leia import SentimentIntensityAnalyzer
 
 
@@ -52,14 +53,13 @@ def analyse():
 
 
     video_id = get_video_id(video)
-    #flash(video_id)
-    #return redirect(url_for('index'))
     comments = get_comments(video_id)
     if(request.form.get("analyse")):
         result = analyse_sentiment(comments)
+        comments_result = ""
     else:
-        result = analyse_words(comments, word)
-    return render_template('index.html', result=result, link=video, word=word)
+        [result,comments_result] = analyse_words(comments, word)
+    return render_template('index.html', result=result, comments_result=comments_result, link=video, word=word)
 
 def get_video_id(video):
     start = video.find('?v=') +3
@@ -143,6 +143,9 @@ def analyse_words(comments, word):
         'Commentários totais': 0,
         'Frequencia': 0,
     }
+    comments_result = []
+    workbook = xlsxwriter.Workbook('uploads/Youtube_Comments.xlsx')
+    worksheet = workbook.add_worksheet()
 
     search_word = word.lower()
 
@@ -150,9 +153,16 @@ def analyse_words(comments, word):
         result['Commentários totais'] += 1
 
         if search_word in comment.lower():
+            worksheet.write(result['Frequencia'], 0, comment)
+            comments_result.append(comment)
             result['Frequencia'] += 1
 
-    return result
+    workbook.close()
+    return [result, comments_result]
+
+@app.route('/uploads/<path:filename>', methods=['GET', 'POST'])
+def download(filename):
+    return send_from_directory(directory='uploads', filename=filename)
 
 
 if __name__ == '__main__':

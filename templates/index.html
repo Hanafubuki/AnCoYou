@@ -22,7 +22,7 @@
         </fieldset>
       </form>
 
-      <div class="mt-4 flex justify-content-center row" id="result">
+      <div class="mt-4 flex-column align-items-center justify-content-center row" id="result">
         {% if result != "" %}
             <h2 class="text-center mt-4">Resultado</h2>
             <ul class="list-group col-6 mt-4">
@@ -30,6 +30,19 @@
                   <li class="list-group-item"><b>{{ key }}</b>: {{ value }}</li>
             {% endfor %}
             </ul>
+
+            {% if comments_result != "" %}
+                <div class="col-6 mt-4 d-flex flex-column align-items-center ">
+                     <b>Comentários que contém essa palavra:</b>
+                     <ul class="list-group mt-2" style="max-height: 400px; overflow-y:scroll;">
+                     {% for value in comments_result %}
+                           <li class="list-group-item">{{ value }}</li>
+                     {% endfor %}
+                     </ul>
+
+                     <a href="/uploads/Youtube_Comments.xlsx" download="Youtube Comments.xlsx" class="btn btn-primary mt-4 mb-4"><i class="fa fa-download"></i> Download</a>
+                </div>
+            {% endif %}
         {% endif %}
       </div>
     </div>
