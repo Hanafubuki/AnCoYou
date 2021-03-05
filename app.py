@@ -8,7 +8,7 @@ from leia import SentimentIntensityAnalyzer
 #encoding: utf-8
 
 # Antes de usar, você precisa de uma developer key do YT
-DEVELOPER_KEY = "AIzaSyDQ99WFIPJOjO4Sijgt0RT2YPqGbioyj7s"
+
 app = Flask(__name__)
 app.secret_key = "asy_by_mimi"
 
